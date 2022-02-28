@@ -1,11 +1,11 @@
 import type { NextPage } from "next";
 import Head from "next/head";
-import { AddTask } from "src/components/AddTask";
 import { BtnArea } from "src/components/btn/BtnArea";
 import { SomeTimeBtn } from "src/components/btn/SomeTimeBtn";
 import { TodayBtn } from "src/components/btn/TodayBtn";
 import { TomorrowBtn } from "src/components/btn/TomorrowBtn";
 import { Layout } from "src/components/layout";
+import { NewTask } from "src/components/NewTask";
 
 const Home: NextPage = () => {
   const handleClick = () => {
@@ -24,7 +24,7 @@ const Home: NextPage = () => {
         <SomeTimeBtn />
       </BtnArea>
       <button onClick={handleClick}>Button</button>
-      <AddTask />
+      <NewTask />
     </Layout>
   );
 };
