@@ -7,11 +7,16 @@ import { RadioBtn } from "src/components/btn/RadioBtn/RadioBtn";
 export type Task = {
   readonly id: string;
   task?: string;
+  checked: boolean;
 };
 
 type TodoItemProps = {
   task: string;
   setTaskList: Dispatch<SetStateAction<Task[]>>;
+  taskList?: any;
+  readonly id: string;
+  tailLineTrough?: string;
+  checked: boolean;
 };
 
 export const TodoItem: VFC<TodoItemProps> = (props) => {
@@ -30,7 +35,6 @@ export const TodoItem: VFC<TodoItemProps> = (props) => {
     const task = e.target.value.replace("\n", "");
     setTask(task);
   };
-
   //textareaの高さ自動（WIP）
   // const calcTextAreaHeight = (task: string) => {
   //     const rowsNum: number = task.split('\n').length;
@@ -50,7 +54,14 @@ export const TodoItem: VFC<TodoItemProps> = (props) => {
       if (e.key === "Enter") {
         const newId = getUniqueId();
         props.setTaskList((prev) => {
-          return [{ id: newId, task }, ...prev];
+          return [
+            {
+              id: newId,
+              task,
+              checked: false, //景谷
+            },
+            ...prev,
+          ];
         });
         //初期化することで前の内容のコピーを防ぐ
         setTask("");
@@ -59,6 +70,22 @@ export const TodoItem: VFC<TodoItemProps> = (props) => {
     },
     [task, props]
   );
+  //タスクの完了/未完了を操作する関数
+  const handleOnCheck = (id: string, checked: boolean) => {
+    //タスクがなければ作動しない
+    if (!task) return;
+    const deepCopy = props.taskList.map((item: Task) => {
+      return { ...item };
+    });
+
+    const newTodos = deepCopy.map((item: Task) => {
+      if (item.id === id) {
+        item.checked = !checked;
+      }
+      return item;
+    });
+    props.setTaskList(newTodos);
+  };
 
   return (
     <div className="flex flex-row pb-1 pl-1">
@@ -71,13 +98,23 @@ export const TodoItem: VFC<TodoItemProps> = (props) => {
         onKeyUp={handleCountChange}
         onChange={handleChangeTask}
         onKeyDown={handleOnKeyDown}
-        className="
+        //イベントハンドラー（タスクの完了/未完了を操作）
+        // eslint-disable-next-line react/jsx-handler-names
+        onClick={() => {
+          handleOnCheck(props.id, props.checked);
+        }}
+        className={`
                   overflow-hidden
                   mt-3
                   focus:outline-none
                   caret-[#F43F5E]
                   resize-none
-                  "
+                  // 景谷
+                  ${
+                    //タスクの完了/未完了に合わせ、タスクに横線をつける/消す
+                    props.checked === true ? props.tailLineTrough : {}
+                  }
+                  `}
       />
     </div>
   );
