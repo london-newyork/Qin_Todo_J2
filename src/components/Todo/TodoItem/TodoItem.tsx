@@ -13,9 +13,7 @@ export type Task = {
 type TodoItemProps = {
   task: string;
   setTaskList: Dispatch<SetStateAction<Task[]>>;
-  taskList?: any;
   readonly id: string;
-  tailLineTrough?: string;
   checked: boolean;
 };
 
@@ -71,20 +69,16 @@ export const TodoItem: VFC<TodoItemProps> = (props) => {
     [task, props]
   );
   //タスクの完了/未完了を操作する関数
-  const handleOnCheck = (id: string, checked: boolean) => {
-    //タスクがなければ作動しない
-    if (!task) return;
-    const deepCopy = props.taskList.map((item: Task) => {
-      return { ...item };
+  const handleOnCheck = () => {
+    props.setTaskList((prevTaskList) => {
+      const newTaskList = prevTaskList.map((item: Task) => {
+        if (item.id === props.id) {
+          return { ...item, checked: !item.checked };
+        }
+        return { ...item };
+      });
+      return newTaskList;
     });
-
-    const newTodos = deepCopy.map((item: Task) => {
-      if (item.id === id) {
-        item.checked = !checked;
-      }
-      return item;
-    });
-    props.setTaskList(newTodos);
   };
 
   return (
@@ -100,9 +94,7 @@ export const TodoItem: VFC<TodoItemProps> = (props) => {
         onKeyDown={handleOnKeyDown}
         //イベントハンドラー（タスクの完了/未完了を操作）
         // eslint-disable-next-line react/jsx-handler-names
-        onClick={() => {
-          handleOnCheck(props.id, props.checked);
-        }}
+        onClick={handleOnCheck}
         className={`
                   overflow-hidden
                   mt-3
@@ -112,7 +104,7 @@ export const TodoItem: VFC<TodoItemProps> = (props) => {
                   // 景谷
                   ${
                     //タスクの完了/未完了に合わせ、タスクに横線をつける/消す
-                    props.checked === true ? props.tailLineTrough : {}
+                    props.checked === true ? "line-through" : ""
                   }
                   `}
       />

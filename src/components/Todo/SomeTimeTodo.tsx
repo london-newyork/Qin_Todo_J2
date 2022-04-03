@@ -20,9 +20,7 @@ export const SomeTimeTodo = () => {
                 <TodoItem
                   task={item.task ? item.task : ""}
                   setTaskList={setSomeTimeTask}
-                  taskList={someTimeTask}
                   id={item.id}
-                  tailLineTrough="line-through"
                   checked={item.checked}
                 />
                 <div className="flex pb-3 m-auto space-x-4">
