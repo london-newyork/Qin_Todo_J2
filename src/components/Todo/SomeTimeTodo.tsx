@@ -23,7 +23,7 @@ export const SomeTimeTodo = () => {
                   id={item.id}
                   checked={item.checked}
                 />
-                <div className="flex pb-3 m-auto space-x-4">
+                <div className="flex pb-6 m-auto space-x-4">
                   <CopyBtn
                     id={item.id}
                     task={item.task ? item.task : ""}
