@@ -130,7 +130,7 @@ export const TodoItem: VFC<TodoItemProps> = (props) => {
                   resize-none
                   ${
                     //タスクの完了/未完了に合わせ、タスクに横線をつける/消す
-                    props.checked === true ? "line-through" : ""
+                    props.checked === true ? "line-through text-baseGray-200" : ""
                   }
                   `}
             onBlur={handleOnBlur}
