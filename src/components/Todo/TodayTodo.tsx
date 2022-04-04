@@ -17,8 +17,13 @@ export const TodayTodo = () => {
         ? todayTask.map((item: Task) => {
             return (
               <RadioBtnGroup key={item.id}>
-                <TodoItem task={item.task ? item.task : ""} setTaskList={setTodayTask} />
-                <div className="flex pb-3 m-auto space-x-4">
+                <TodoItem
+                  task={item.task ? item.task : ""}
+                  setTaskList={setTodayTask}
+                  id={item.id}
+                  checked={item.checked}
+                />
+                <div className="flex pb-6 m-auto space-x-4">
                   <CopyBtn
                     id={item.id}
                     task={item.task ? item.task : ""}
@@ -37,7 +42,7 @@ export const TodayTodo = () => {
           })
         : null}
       <RadioBtnGroup>
-        <TodoItem task={""} setTaskList={setTodayTask} />
+        <TodoItem task={""} setTaskList={setTodayTask} id={""} checked={false} />
       </RadioBtnGroup>
     </div>
   );

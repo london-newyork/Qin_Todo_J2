@@ -2,20 +2,23 @@ import type { ChangeEvent, Dispatch, KeyboardEventHandler, SetStateAction, VFC }
 import { useCallback } from "react";
 import { useEffect, useState } from "react";
 import { PlusBtn } from "src/components/btn/PlusBtn";
-import { RadioBtn } from "src/components/btn/RadioBtn/RadioBtn";
 
 export type Task = {
   readonly id: string;
   task?: string;
+  checked: boolean;
 };
 
 type TodoItemProps = {
   task: string;
   setTaskList: Dispatch<SetStateAction<Task[]>>;
+  readonly id: string;
+  checked: boolean;
 };
 
 export const TodoItem: VFC<TodoItemProps> = (props) => {
   const [task, setTask] = useState<string>("");
+  const [isFocused, setIsFocused] = useState<boolean>(false);
 
   useEffect(() => {
     setTask(props.task);
@@ -30,7 +33,6 @@ export const TodoItem: VFC<TodoItemProps> = (props) => {
     const task = e.target.value.replace("\n", "");
     setTask(task);
   };
-
   //textareaの高さ自動（WIP）
   // const calcTextAreaHeight = (task: string) => {
   //     const rowsNum: number = task.split('\n').length;
@@ -48,9 +50,17 @@ export const TodoItem: VFC<TodoItemProps> = (props) => {
   const handleOnKeyDown = useCallback(
     (e: KeyboardEventHandler<HTMLTextAreaElement> | undefined | any) => {
       if (e.key === "Enter") {
+        if (!task) return;
         const newId = getUniqueId();
         props.setTaskList((prev) => {
-          return [{ id: newId, task }, ...prev];
+          return [
+            {
+              id: newId,
+              task,
+              checked: false,
+            },
+            ...prev,
+          ];
         });
         //初期化することで前の内容のコピーを防ぐ
         setTask("");
@@ -60,24 +70,68 @@ export const TodoItem: VFC<TodoItemProps> = (props) => {
     [task, props]
   );
 
+  //タスクの完了/未完了を操作する関数
+  const handleOnCheck = () => {
+    props.setTaskList((prevTaskList) => {
+      const newTaskList = prevTaskList.map((item: Task) => {
+        if (item.id === props.id) {
+          return { ...item, checked: !item.checked };
+        }
+        return { ...item };
+      });
+      return newTaskList;
+    });
+  };
+
+  //「タスクを追加する」でクリック（focus）した場合
+  const handleOnFocus = () => {
+    setIsFocused(true);
+  };
+
+  //入力欄に何も記入していない状態で、欄外をクリック（blur)した場合
+  const handleOnBlur = () => {
+    setIsFocused(false);
+  };
+
   return (
     <div className="flex flex-row pb-1 pl-1">
-      {task === "" ? <PlusBtn /> : <RadioBtn variant="rose" value="task1" />}
+      {isFocused || task ? (
+        <div className="flex relative justify-center items-center w-6 h-6 rounded-full border-2 border-baseGray-200 border-solid">
+          <input
+            type="checkbox"
+            //タスクの完了/未完了を操作(checkedを使用)
+            checked={props.checked} //これが無いと、taskをクリックした際、ボタンが赤くならない
+            onChange={handleOnCheck}
+            //ボタンの赤色は、擬似クラス（checked:)で制御。textarea同様、三項演算でも設定可能
+            className="absolute w-4 h-4 checked:bg-red-500 rounded-full border-baseGray-200 appearance-none cursor-pointer"
+          />
+        </div>
+      ) : (
+        <PlusBtn />
+      )}
       <textarea
-        placeholder="タスクを追加する"
         // rows={calcTextAreaHeight(task)}
         value={task}
         maxLength={200}
         onKeyUp={handleCountChange}
         onChange={handleChangeTask}
         onKeyDown={handleOnKeyDown}
-        className="
+        //イベントハンドラー（タスクの完了/未完了を操作）
+        placeholder={isFocused ? "" : "タスクを追加する"}
+        onClick={handleOnCheck}
+        className={`
                   overflow-hidden
-                  mt-3
+                  ml-3
                   focus:outline-none
                   caret-[#F43F5E]
                   resize-none
-                  "
+                  ${
+                    //タスクの完了/未完了に合わせ、タスクに横線をつける/消す
+                    props.checked === true ? "line-through text-baseGray-200" : ""
+                  }
+                  `}
+        onFocus={handleOnFocus}
+        onBlur={handleOnBlur}
       />
     </div>
   );
