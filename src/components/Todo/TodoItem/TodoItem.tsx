@@ -19,6 +19,8 @@ type TodoItemProps = {
 export const TodoItem: VFC<TodoItemProps> = (props) => {
   const [task, setTask] = useState<string>("");
   const [isFocused, setIsFocused] = useState<boolean>(false);
+  //全角文字変換前の入力値を保存する
+  const [isComposing, setIsComposing] = useState(false);
 
   useEffect(() => {
     setTask(props.task);
@@ -47,27 +49,34 @@ export const TodoItem: VFC<TodoItemProps> = (props) => {
     truncate(e.target.value, 200);
   };
 
+  const handleStartComposition = () => {
+    return setIsComposing(true);
+  };
+  const handleEndComposition = () => {
+    return setIsComposing(false);
+  };
+
   const handleOnKeyDown = useCallback(
     (e: KeyboardEventHandler<HTMLTextAreaElement> | undefined | any) => {
-      if (e.key === "Enter") {
-        if (!task) return;
-        const newId = getUniqueId();
-        props.setTaskList((prev) => {
-          return [
-            {
-              id: newId,
-              task,
-              checked: false,
-            },
-            ...prev,
-          ];
-        });
-        //初期化することで前の内容のコピーを防ぐ
-        setTask("");
-      }
-      return;
+      //Enterを押す前、又は全角文字変換前の場合、以下実行しない
+      if (e.key !== "Enter" || isComposing) return;
+      //全角文字変換完了後Enterすれば、以下実行
+      if (!task) return;
+      const newId = getUniqueId();
+      props.setTaskList((prev) => {
+        return [
+          {
+            id: newId,
+            task,
+            checked: false,
+          },
+          ...prev,
+        ];
+      });
+      //初期化することで前の内容のコピーを防ぐ
+      setTask("");
     },
-    [task, props]
+    [isComposing, props, task]
   );
 
   //タスクの完了/未完了を操作する関数
@@ -119,6 +128,9 @@ export const TodoItem: VFC<TodoItemProps> = (props) => {
         //イベントハンドラー（タスクの完了/未完了を操作）
         placeholder={isFocused ? "" : "タスクを追加する"}
         onClick={handleOnCheck}
+        //全角文字変換前の入力値を監視する
+        onCompositionStart={handleStartComposition}
+        onCompositionEnd={handleEndComposition}
         className={`
                   overflow-hidden
                   ml-3
