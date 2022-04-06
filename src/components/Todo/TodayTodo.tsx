@@ -22,6 +22,7 @@ export const TodayTodo = () => {
                   setTaskList={setTodayTask}
                   id={item.id}
                   checked={item.checked}
+                  tailChecked="checked:bg-primary-rose"
                 />
                 <div className="flex pb-6 m-auto space-x-4">
                   <CopyBtn
@@ -42,7 +43,7 @@ export const TodayTodo = () => {
           })
         : null}
       <RadioBtnGroup>
-        <TodoItem task={""} setTaskList={setTodayTask} id={""} checked={false} />
+        <TodoItem task={""} setTaskList={setTodayTask} id={""} checked={false} tailChecked={""} />
       </RadioBtnGroup>
     </div>
   );
