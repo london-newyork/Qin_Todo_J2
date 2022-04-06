@@ -14,6 +14,7 @@ type TodoItemProps = {
   setTaskList: Dispatch<SetStateAction<Task[]>>;
   readonly id: string;
   checked: boolean;
+  tailChecked: string;
 };
 
 export const TodoItem: VFC<TodoItemProps> = (props) => {
@@ -111,8 +112,8 @@ export const TodoItem: VFC<TodoItemProps> = (props) => {
             //タスクの完了/未完了を操作(checkedを使用)
             checked={props.checked} //これが無いと、taskをクリックした際、ボタンが赤くならない
             onChange={handleOnCheck}
-            //ボタンの赤色は、擬似クラス（checked:)で制御。textarea同様、三項演算でも設定可能
-            className="absolute w-4 h-4 checked:bg-red-500 rounded-full border-baseGray-200 appearance-none cursor-pointer"
+            //時期別コンポーネントで指定された色がpropsとして渡され表示
+            className={`absolute w-4 h-4 rounded-full border-baseGray-200 appearance-none cursor-pointer ${props.tailChecked}`}
           />
         </div>
       ) : (
