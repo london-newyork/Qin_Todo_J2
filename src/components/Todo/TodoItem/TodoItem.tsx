@@ -1,6 +1,7 @@
 import type { ChangeEvent, Dispatch, KeyboardEventHandler, SetStateAction, VFC } from "react";
 import { useCallback } from "react";
 import { useEffect, useState } from "react";
+import TextareaAutosize from "react-textarea-autosize";
 import { PlusBtn } from "src/components/btn/PlusBtn";
 
 export type Task = {
@@ -24,6 +25,7 @@ export const TodoItem: VFC<TodoItemProps> = (props) => {
   const [isFocused, setIsFocused] = useState<boolean>(false);
   //全角文字変換前の入力値を保存する
   const [isComposing, setIsComposing] = useState(false);
+  // const [textAreaHeight, setTextAreaHeight] = useState()
 
   useEffect(() => {
     setTask(props.task);
@@ -38,11 +40,6 @@ export const TodoItem: VFC<TodoItemProps> = (props) => {
     const task = e.target.value.replace("\n", "");
     setTask(task);
   };
-  //textareaの高さ自動（WIP）
-  // const calcTextAreaHeight = (task: string) => {
-  //     const rowsNum: number = task.split('\n').length;
-  //     return rowsNum
-  //   }
 
   //最大200文字まで書き込み、それ以上は入力文字数制限
   const handleCountChange = (e: any) => {
@@ -138,8 +135,7 @@ export const TodoItem: VFC<TodoItemProps> = (props) => {
       ) : (
         <PlusBtn />
       )}
-      <textarea
-        // rows={calcTextAreaHeight(task)}
+      <TextareaAutosize
         value={task}
         maxLength={200}
         onKeyUp={handleCountChange}
