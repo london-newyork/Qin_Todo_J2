@@ -24,12 +24,13 @@ export const TodayTodo = () => {
                   checked={item.checked}
                   tailChecked="checked:bg-primary-rose"
                 />
-                <div className="flex pb-6 m-auto space-x-4">
+                <div className="flex items-start pb-6 space-x-4">
                   <CopyBtn
                     id={item.id}
                     task={item.task ? item.task : ""}
                     setTaskList={setTodayTask}
                     taskList={todayTask}
+                    checked={item.checked}
                   />
                   <TrashBtn
                     id={item.id}

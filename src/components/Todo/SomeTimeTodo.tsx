@@ -24,12 +24,13 @@ export const SomeTimeTodo = () => {
                   checked={item.checked}
                   tailChecked="checked:bg-tertiary-yellow"
                 />
-                <div className="flex pb-6 m-auto space-x-4">
+                <div className="flex items-start pb-6 space-x-4">
                   <CopyBtn
                     id={item.id}
                     task={item.task ? item.task : ""}
                     setTaskList={setSomeTimeTask}
                     taskList={someTimeTask}
+                    checked={item.checked}
                   />
                   <TrashBtn
                     id={item.id}
