@@ -7,6 +7,7 @@ export type Task = {
   readonly id: string;
   task?: string;
   checked: boolean;
+  registered: boolean;
 };
 
 type TodoItemProps = {
@@ -15,6 +16,7 @@ type TodoItemProps = {
   readonly id: string;
   checked: boolean;
   tailChecked: string;
+  registered: boolean;
 };
 
 export const TodoItem: VFC<TodoItemProps> = (props) => {
@@ -63,6 +65,22 @@ export const TodoItem: VFC<TodoItemProps> = (props) => {
       if (e.key !== "Enter" || isComposing) return;
       //全角文字変換完了後Enterすれば、以下実行
       if (!task) return;
+
+      //setTaskListの更新
+      if (props.task) {
+        props.setTaskList((prevTaskList) => {
+          const newTaskList = prevTaskList.map((item: Task) => {
+            if (item.id === props.id) {
+              return { ...item, task: task };
+            }
+            return { ...item };
+          });
+          return newTaskList;
+        });
+        return;
+      }
+      if (props.registered) return;
+
       const newId = getUniqueId();
       props.setTaskList((prev) => {
         return [
@@ -70,6 +88,7 @@ export const TodoItem: VFC<TodoItemProps> = (props) => {
             id: newId,
             task,
             checked: false,
+            registered: true,
           },
           ...prev,
         ];
@@ -105,7 +124,7 @@ export const TodoItem: VFC<TodoItemProps> = (props) => {
 
   return (
     <div className="flex flex-row pb-1 pl-1">
-      {isFocused || task ? (
+      {isFocused || task || props.registered ? (
         <div className="flex relative justify-center items-center w-6 h-6 rounded-full border-2 border-baseGray-200 border-solid">
           <input
             type="checkbox"
@@ -127,7 +146,7 @@ export const TodoItem: VFC<TodoItemProps> = (props) => {
         onChange={handleChangeTask}
         onKeyDown={handleOnKeyDown}
         //イベントハンドラー（タスクの完了/未完了を操作）
-        placeholder={isFocused ? "" : "タスクを追加する"}
+        placeholder={isFocused || props.registered ? "" : "タスクを追加する"}
         onClick={handleOnCheck}
         //全角文字変換前の入力値を監視する
         onCompositionStart={handleStartComposition}
