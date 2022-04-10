@@ -65,6 +65,22 @@ export const TodoItem: VFC<TodoItemProps> = (props) => {
       if (e.key !== "Enter" || isComposing) return;
       //全角文字変換完了後Enterすれば、以下実行
       if (!task) return;
+
+      //setTaskListの更新
+      if (props.task) {
+        props.setTaskList((prevTaskList) => {
+          const newTaskList = prevTaskList.map((item: Task) => {
+            if (item.id === props.id) {
+              return { ...item, task: task };
+            }
+            return { ...item };
+          });
+          return newTaskList;
+        });
+        return;
+      }
+      if (props.registered) return;
+
       const newId = getUniqueId();
       props.setTaskList((prev) => {
         return [
