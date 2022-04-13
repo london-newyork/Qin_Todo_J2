@@ -1,5 +1,5 @@
 import type { ChangeEvent, Dispatch, KeyboardEventHandler, SetStateAction, VFC } from "react";
-import { useCallback, useRef } from "react";
+import { useCallback } from "react";
 import { useEffect, useState } from "react";
 import TextareaAutosize from "react-textarea-autosize";
 import { PlusBtn } from "src/components/btn/PlusBtn";
@@ -120,49 +120,54 @@ export const TodoItem: VFC<TodoItemProps> = (props) => {
   };
 
   //「タスクを追加する」でクリック（focus）した場合
-  // const handleOnButtonFocus = () => {
-  //   setIsFocused(true);
-  // };
+  const handleOnButtonFocus = () => {
+    setIsFocused(true);
+  };
 
   //フォーカス設定（＋ボタンを押した際、入力欄でカーソルが点滅するようにする）
-  const inputEl = useRef(null);
+  // const inputEl = useRef(null);
 
-  const handleOnClick = () => {
-    setIsFocused(true);
-    inputEl.current.focus();
-  };
+  // const handleOnClick = () => {
+  //   setIsFocused(true);
+  //   inputEl.current.focus();
+  // };
 
   return (
     <div className="flex flex-row pb-1 pl-1">
-      {isFocused || task || props.registered ? (
-        <div className="flex relative justify-center items-center w-6 h-6 rounded-full border-2 border-baseGray-200 border-solid">
-          <input
-            type="checkbox"
-            //タスクの完了/未完了を操作(checkedを使用)
-            checked={props.checked} //これが無いと、taskをクリックした際、ボタンが赤くならない
-            onChange={handleOnCheck}
-            //時期別コンポーネントで指定された色がpropsとして渡され表示
-            className={`absolute w-4 h-4 rounded-full border-baseGray-200 appearance-none cursor-pointer ${props.tailChecked}`}
-            onClick={handleOnBlur}
-          />
-        </div>
-      ) : (
-        <PlusBtn onClick={handleOnClick} />
-      )}
-      <TextareaAutosize
-        ref={inputEl} //フォーカス設定
-        value={task}
-        maxLength={200}
-        onKeyUp={handleCountChange}
-        onChange={handleChangeTask}
-        onKeyDown={handleOnKeyDown}
-        //イベントハンドラー（タスクの完了/未完了を操作）
-        placeholder={isFocused || props.registered ? "" : "タスクを追加する"}
-        // onClick={handleOnCheck}
-        //全角文字変換前の入力値を監視する
-        onCompositionStart={handleStartComposition}
-        onCompositionEnd={handleEndComposition}
-        className={`
+      <label htmlFor={props.id}>
+        {isFocused || task || props.registered ? (
+          <div className="flex relative justify-center items-center w-6 h-6 rounded-full border-2 border-baseGray-200 border-solid">
+            <input
+              type="checkbox"
+              //タスクの完了/未完了を操作(checkedを使用)
+              checked={props.checked} //これが無いと、taskをクリックした際、ボタンが赤くならない
+              onChange={handleOnCheck}
+              //時期別コンポーネントで指定された色がpropsとして渡され表示
+              className={`absolute w-4 h-4 rounded-full border-baseGray-200 appearance-none cursor-pointer ${props.tailChecked}`}
+              onClick={handleOnBlur}
+            />
+          </div>
+        ) : (
+          <PlusBtn onClick={handleOnButtonFocus} />
+          // <PlusBtn onClick={handleOnClick} />
+        )}
+      </label>
+      <label htmlFor={props.id}>
+        <TextareaAutosize
+          id={props.id}
+          // ref={inputEl} //フォーカス設定
+          value={task}
+          maxLength={200}
+          onKeyUp={handleCountChange}
+          onChange={handleChangeTask}
+          onKeyDown={handleOnKeyDown}
+          //イベントハンドラー（タスクの完了/未完了を操作）
+          placeholder={isFocused || props.registered ? "" : "タスクを追加する"}
+          // onClick={handleOnCheck}
+          //全角文字変換前の入力値を監視する
+          onCompositionStart={handleStartComposition}
+          onCompositionEnd={handleEndComposition}
+          className={`
                   overflow-hidden
                   ml-3
                   focus:outline-none
@@ -173,9 +178,10 @@ export const TodoItem: VFC<TodoItemProps> = (props) => {
                     props.checked === true ? "line-through text-baseGray-200" : ""
                   }
                   `}
-        onFocus={handleOnFocus}
-        onBlur={handleOnBlur}
-      />
+          onFocus={handleOnFocus}
+          onBlur={handleOnBlur}
+        />
+      </label>
     </div>
   );
 };
