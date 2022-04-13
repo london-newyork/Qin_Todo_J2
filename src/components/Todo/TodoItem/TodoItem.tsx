@@ -1,5 +1,5 @@
 import type { ChangeEvent, Dispatch, KeyboardEventHandler, SetStateAction, VFC } from "react";
-import { useCallback } from "react";
+import { useCallback, useRef } from "react";
 import { useEffect, useState } from "react";
 import TextareaAutosize from "react-textarea-autosize";
 import { PlusBtn } from "src/components/btn/PlusBtn";
@@ -120,8 +120,16 @@ export const TodoItem: VFC<TodoItemProps> = (props) => {
   };
 
   //「タスクを追加する」でクリック（focus）した場合
-  const handleOnButtonFocus = () => {
+  // const handleOnButtonFocus = () => {
+  //   setIsFocused(true);
+  // };
+
+  //フォーカス設定（＋ボタンを押した際、入力欄でカーソルが点滅するようにする）
+  const inputEl = useRef(null);
+
+  const handleOnClick = () => {
     setIsFocused(true);
+    inputEl.current.focus();
   };
 
   return (
@@ -139,9 +147,10 @@ export const TodoItem: VFC<TodoItemProps> = (props) => {
           />
         </div>
       ) : (
-        <PlusBtn onClick={handleOnButtonFocus} />
+        <PlusBtn onClick={handleOnClick} />
       )}
       <TextareaAutosize
+        ref={inputEl} //フォーカス設定
         value={task}
         maxLength={200}
         onKeyUp={handleCountChange}
