@@ -136,7 +136,6 @@ export const TodoItem: VFC<TodoItemProps> = (props) => {
               onChange={handleOnCheck}
               //時期別コンポーネントで指定された色がpropsとして渡され表示
               className={`absolute w-4 h-4 rounded-full border-baseGray-200 appearance-none cursor-pointer ${props.tailChecked}`}
-              onClick={handleOnBlur}
             />
           </div>
         ) : (
