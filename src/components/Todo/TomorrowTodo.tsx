@@ -48,7 +48,14 @@ export const TomorrowTodo = () => {
           })
         : null}
       <RadioBtnGroup>
-        <TodoItem task={""} setTaskList={setTomorrowTask} id={""} checked={false} tailChecked={""} registered={false} />
+        <TodoItem
+          task={""}
+          setTaskList={setTomorrowTask}
+          id={"tomorrow"}
+          checked={false}
+          tailChecked={""}
+          registered={false}
+        />
       </RadioBtnGroup>
     </div>
   );
