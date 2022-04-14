@@ -124,14 +124,6 @@ export const TodoItem: VFC<TodoItemProps> = (props) => {
     setIsFocused(true);
   };
 
-  //フォーカス設定（＋ボタンを押した際、入力欄でカーソルが点滅するようにする）
-  // const inputEl = useRef(null);
-
-  // const handleOnClick = () => {
-  //   setIsFocused(true);
-  //   inputEl.current.focus();
-  // };
-
   return (
     <div className="flex flex-row pb-1 pl-1">
       <label htmlFor={props.id}>
@@ -149,25 +141,21 @@ export const TodoItem: VFC<TodoItemProps> = (props) => {
           </div>
         ) : (
           <PlusBtn onClick={handleOnButtonFocus} />
-          // <PlusBtn onClick={handleOnClick} />
         )}
       </label>
-      <label htmlFor={props.id}>
-        <TextareaAutosize
-          id={props.id}
-          // ref={inputEl} //フォーカス設定
-          value={task}
-          maxLength={200}
-          onKeyUp={handleCountChange}
-          onChange={handleChangeTask}
-          onKeyDown={handleOnKeyDown}
-          //イベントハンドラー（タスクの完了/未完了を操作）
-          placeholder={isFocused || props.registered ? "" : "タスクを追加する"}
-          // onClick={handleOnCheck}
-          //全角文字変換前の入力値を監視する
-          onCompositionStart={handleStartComposition}
-          onCompositionEnd={handleEndComposition}
-          className={`
+      <TextareaAutosize
+        id={props.id}
+        value={task}
+        maxLength={200}
+        onKeyUp={handleCountChange}
+        onChange={handleChangeTask}
+        onKeyDown={handleOnKeyDown}
+        //イベントハンドラー（タスクの完了/未完了を操作）
+        placeholder={isFocused || props.registered ? "" : "タスクを追加する"}
+        //全角文字変換前の入力値を監視する
+        onCompositionStart={handleStartComposition}
+        onCompositionEnd={handleEndComposition}
+        className={`
                   overflow-hidden
                   ml-3
                   focus:outline-none
@@ -178,10 +166,9 @@ export const TodoItem: VFC<TodoItemProps> = (props) => {
                     props.checked === true ? "line-through text-baseGray-200" : ""
                   }
                   `}
-          onFocus={handleOnFocus}
-          onBlur={handleOnBlur}
-        />
-      </label>
+        onFocus={handleOnFocus}
+        onBlur={handleOnBlur}
+      />
     </div>
   );
 };
