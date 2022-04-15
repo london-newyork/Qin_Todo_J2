@@ -119,23 +119,31 @@ export const TodoItem: VFC<TodoItemProps> = (props) => {
     setIsFocused(false);
   };
 
+  //「タスクを追加する」でクリック（focus）した場合
+  const handleOnButtonFocus = () => {
+    setIsFocused(true);
+  };
+
   return (
     <div className="flex flex-row pb-1 pl-1">
-      {isFocused || task || props.registered ? (
-        <div className="flex relative justify-center items-center w-6 h-6 rounded-full border-2 border-baseGray-200 border-solid">
-          <input
-            type="checkbox"
-            //タスクの完了/未完了を操作(checkedを使用)
-            checked={props.checked} //これが無いと、taskをクリックした際、ボタンが赤くならない
-            onChange={handleOnCheck}
-            //時期別コンポーネントで指定された色がpropsとして渡され表示
-            className={`absolute w-4 h-4 rounded-full border-baseGray-200 appearance-none cursor-pointer ${props.tailChecked}`}
-          />
-        </div>
-      ) : (
-        <PlusBtn />
-      )}
+      <label htmlFor={props.id}>
+        {isFocused || task || props.registered ? (
+          <div className="flex relative justify-center items-center w-6 h-6 rounded-full border-2 border-baseGray-200 border-solid">
+            <input
+              type="checkbox"
+              //タスクの完了/未完了を操作(checkedを使用)
+              checked={props.checked} //これが無いと、taskをクリックした際、ボタンが赤くならない
+              onChange={handleOnCheck}
+              //時期別コンポーネントで指定された色がpropsとして渡され表示
+              className={`absolute w-4 h-4 rounded-full border-baseGray-200 appearance-none cursor-pointer ${props.tailChecked}`}
+            />
+          </div>
+        ) : (
+          <PlusBtn onClick={handleOnButtonFocus} />
+        )}
+      </label>
       <TextareaAutosize
+        id={props.id}
         value={task}
         maxLength={200}
         onKeyUp={handleCountChange}
@@ -143,7 +151,6 @@ export const TodoItem: VFC<TodoItemProps> = (props) => {
         onKeyDown={handleOnKeyDown}
         //イベントハンドラー（タスクの完了/未完了を操作）
         placeholder={isFocused || props.registered ? "" : "タスクを追加する"}
-        onClick={handleOnCheck}
         //全角文字変換前の入力値を監視する
         onCompositionStart={handleStartComposition}
         onCompositionEnd={handleEndComposition}
