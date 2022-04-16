@@ -9,6 +9,7 @@ type TodoItemProps = {
   setTaskList: Dispatch<SetStateAction<Task[]>>;
   taskList: Task[];
   checked: boolean;
+  registered: boolean;
 };
 
 export const CopyBtn: VFC<TodoItemProps> = (props) => {
@@ -28,7 +29,12 @@ export const CopyBtn: VFC<TodoItemProps> = (props) => {
         return item.id === props.id;
       });
       const beforeIndexList = prev.slice(0, index);
-      const middleList = filteredItem.concat({ id: newId, task: props.task, checked: props.checked });
+      const middleList = filteredItem.concat({
+        id: newId,
+        task: props.task,
+        checked: props.checked,
+        registered: props.registered,
+      });
       return beforeIndexList.concat(middleList, prev.slice(index + 1, prev.length));
     });
   };
