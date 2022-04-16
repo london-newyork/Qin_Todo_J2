@@ -35,6 +35,7 @@ export const TodayTodo = () => {
                     setTaskList={setTodayTask}
                     taskList={todayTask}
                     checked={item.checked}
+                    registered={item.registered}
                   />
                   <TrashBtn
                     id={item.id}

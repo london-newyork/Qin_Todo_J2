@@ -35,6 +35,7 @@ export const SomeTimeTodo = () => {
                     setTaskList={setSomeTimeTask}
                     taskList={someTimeTask}
                     checked={item.checked}
+                    registered={item.registered}
                   />
                   <TrashBtn
                     id={item.id}
